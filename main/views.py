@@ -31,7 +31,7 @@ class LoginView(APIView):
             serializer = UserSerializer(user)
             return Response(serializer.data)
         else:
-            return Response({'message': 'Invalid credentials'})
+            return Response({'message': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(APIView):
