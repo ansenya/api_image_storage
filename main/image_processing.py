@@ -7,7 +7,6 @@ import os
 
 def process(img):
     curr_dir = os.getcwd()
-
     # img_cp = img
     # pil_image = Image.open(img_cp)
     # dominant_color = np.array(pil_image.histogram(), dtype=np.int32).reshape(-1, 256).argmax(axis=1)
@@ -22,7 +21,7 @@ def process(img):
 
     nparr = np.frombuffer(img.read(), np.uint8)
     image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
+    image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
     h, w, _ = image.shape
 
     blob = cv2.dnn.blobFromImage(image, 1 / 255, (416, 416), swapRB=True, crop=False)
