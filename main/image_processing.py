@@ -7,10 +7,6 @@ import os
 
 def process(img):
     curr_dir = os.getcwd()
-    # img_cp = img
-    # pil_image = Image.open(img_cp)
-    # dominant_color = np.array(pil_image.histogram(), dtype=np.int32).reshape(-1, 256).argmax(axis=1)
-    # print(dominant_color)
 
     net = cv2.dnn.readNet(os.path.join(curr_dir, 'main', 'config', 'yolov3.weights'), os.path.join(curr_dir, 'main', 'config', 'yolov3.cfg'))
 
@@ -21,7 +17,7 @@ def process(img):
 
     nparr = np.frombuffer(img.read(), np.uint8)
     image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+
     h, w, _ = image.shape
 
     blob = cv2.dnn.blobFromImage(image, 1 / 255, (416, 416), swapRB=True, crop=False)
@@ -40,6 +36,7 @@ def process(img):
                 class_ids.append(class_id)
                 confidences.append(confidence)
 
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     pixel_vals = image.reshape((-1, 3))
     pixel_vals = np.float32(pixel_vals)
 

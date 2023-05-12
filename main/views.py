@@ -59,8 +59,13 @@ class UserDetails(generics.RetrieveAPIView, BaseApiView):
 
 
 class UserEdit(BaseApiView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
     def put(self, request, pk):
         user = get_object_or_404(User, id=pk)
+        if user.id != request.user.id:
+            return Response({"message": "Forbidden"}, status=status.HTTP_403_FORBIDDEN)
         if request.data.get('password') is not None:
             request.data.pop('password')
         if request.data.get('username') is not None:
@@ -68,6 +73,9 @@ class UserEdit(BaseApiView):
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            user_dict = serializer.data
+            user_dict['avatar'], user_dict['background'] = request.build_absolute_uri(serializer.data['avatar']),\
+                request.build_absolute_uri(serializer.data['background'])
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

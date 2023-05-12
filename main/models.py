@@ -7,8 +7,10 @@ from django.db import models
 
 # Create your models here.
 class User(AbstractUser):
-    avatar = models.ImageField(upload_to="avatars", null=True)
+    avatar = models.ImageField(upload_to="avatars", default='default.svg')
     country = CountryField()
+    background = models.ImageField(upload_to='backgrounds', null=True)
+    about = models.TextField(max_length=500, null=True)
 
 
 class Image(models.Model):

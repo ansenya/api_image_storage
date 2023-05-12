@@ -16,11 +16,12 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     avatar = serializers.ImageField(required=False,)
+    background = serializers.ImageField(required=False)
     country = CountryField()
 
     class Meta:
         model = User
-        fields = ["username", "avatar", "password", "email", 'id', "first_name", "last_name", 'country']
+        fields = ["username", "avatar", "password", "email", 'id', "first_name", "last_name", 'country', 'background', 'about']
         read_only_fields = ['id']
 
     def create(self, validated_data):
@@ -37,14 +38,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    #author = serializers.SlugRelatedField(slug_field='username', read_only=True)
     image = serializers.ImageField()
     description = serializers.CharField(required=False)
 
     class Meta:
         model = Image
         fields = ['author', 'image', 'name', 'tags', 'uploaded_at', 'id', 'description', 'color', 'height', 'width']
-        read_only_fields = ['id', 'uploaded_at', 'tags', 'height', 'width', 'color']
+        read_only_fields = ['id', 'uploaded_at', 'tags', 'height', 'width', 'color', 'author']
 
     def create(self, validated_data):
         tags, h, w, hex_color = process(validated_data['image'].file)
