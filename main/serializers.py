@@ -16,11 +16,12 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     avatar = serializers.ImageField(required=False,)
+    background = serializers.ImageField(required=False)
     country = CountryField()
 
     class Meta:
         model = User
-        fields = ["username", "avatar", "password", "email", 'id', "first_name", "last_name", 'country']
+        fields = ["username", "avatar", "password", "email", 'id', "first_name", "last_name", 'country', 'background']
         read_only_fields = ['id']
 
     def create(self, validated_data):
