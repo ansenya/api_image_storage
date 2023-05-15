@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, get_object_or_404
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.parsers import FileUploadParser
+from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import generics, permissions, status
 from django.contrib.auth import get_user_model, authenticate, login, logout
@@ -61,6 +61,7 @@ class UserDetails(generics.RetrieveAPIView, BaseApiView):
 class UserEdit(BaseApiView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
     def put(self, request, pk):
         user = get_object_or_404(User, id=pk)
@@ -76,7 +77,7 @@ class UserEdit(BaseApiView):
             user_dict = serializer.data
             user_dict['avatar'], user_dict['background'] = request.build_absolute_uri(serializer.data['avatar']),\
                 request.build_absolute_uri(serializer.data['background'])
-            return Response(serializer.data)
+            return Response(user_dict)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
