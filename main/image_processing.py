@@ -32,7 +32,7 @@ def process(img):
             scores = detection[5:]
             class_id = np.argmax(scores)
             confidence = scores[class_id]
-            if confidence > 0.5:
+            if confidence > 0.7:
                 class_ids.append(class_id)
                 confidences.append(confidence)
 
